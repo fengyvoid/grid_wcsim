@@ -1,5 +1,6 @@
 #!/bin/bash 
 # James Minock 
+# Modified by Steven Doran
 
 PART_NAME=$1
 
