@@ -1,5 +1,6 @@
 #!/bin/bash 
 # From James Minock 
+# Modified by Steven Doran
 
 cat <<EOF
 condor   dir: $CONDOR_DIR_INPUT 
