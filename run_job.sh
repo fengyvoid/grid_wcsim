@@ -9,10 +9,14 @@ output   dir: $CONDOR_DIR_OUTPUT
 EOF
 
 HOSTNAME=$(hostname -f) 
-GRIDUSER="doran"            
+GRIDUSER="yuefeng"            
 
 # Argument passed through job submission 
 PART_NAME=$1
+xStep=$3
+yStep=$4
+xDirStep=$5
+yDirStep=$6
 
 # Create a dummy log file in the output directory
 DUMMY_OUTPUT_FILE=${CONDOR_DIR_OUTPUT}/${JOBSUBJOBID}_dummy_output 
@@ -54,26 +58,20 @@ echo "" >> ${DUMMY_OUTPUT_FILE}
 cat macros/setRandomParameters.mac >> ${DUMMY_OUTPUT_FILE}
 echo "" >> ${DUMMY_OUTPUT_FILE}
 
-# Tuning macro
-echo "tuning_parameters.mac:" >> ${DUMMY_OUTPUT_FILE}
-echo "----------------------" >> ${DUMMY_OUTPUT_FILE}
-cat macros/tuning_parameters.mac >> ${DUMMY_OUTPUT_FILE}
-echo "" >> ${DUMMY_OUTPUT_FILE}
-
 
 echo "Make sure singularity is bind mounting correctly (ls /cvmfs/singularity)" >> ${DUMMY_OUTPUT_FILE}
 ls /cvmfs/singularity.opensciencegrid.org >> ${DUMMY_OUTPUT_FILE}
 echo "" >> ${DUMMY_OUTPUT_FILE}
 
 # Setup singularity container 
-singularity exec -B/srv:/srv /cvmfs/singularity.opensciencegrid.org/anniesoft/wcsim\:latest/ $CONDOR_DIR_INPUT/wcsim_container.sh $PART_NAME
+singularity exec -B/srv:/srv /cvmfs/singularity.opensciencegrid.org/anniesoft/wcsim\:latest/ $CONDOR_DIR_INPUT/wcsim_container.sh $PART_NAME $xStep $yStep $xDirStep $yDirStep
 
 
 # cleanup and move files to $CONDOR_OUTPUT after leaving singularity environment
 echo "Moving the output files to CONDOR OUTPUT..." >> ${DUMMY_OUTPUT_FILE} 
 ${JSB_TMP}/ifdh.sh cp -D /srv/logfile* $CONDOR_DIR_OUTPUT         # log files
-${JSB_TMP}/ifdh.sh cp -D /srv/wcsim_${PART_NAME}.root $CONDOR_DIR_OUTPUT
-${JSB_TMP}/ifdh.sh cp -D /srv/wcsim_lappd_${PART_NAME}.root $CONDOR_DIR_OUTPUT
+${JSB_TMP}/ifdh.sh cp -D /srv/wcsim_mu_${PART_NAME}.root $CONDOR_DIR_OUTPUT
+${JSB_TMP}/ifdh.sh cp -D /srv/wcsim_mu_lappd_${PART_NAME}.root $CONDOR_DIR_OUTPUT
 
 echo "" >> ${DUMMY_OUTPUT_FILE} 
 echo "Input:" >> ${DUMMY_OUTPUT_FILE} 
