@@ -1,0 +1,57 @@
+#!/bin/sh 
+# Sample setup macro with no visualization
+# for a full list of /gun/ commands see:
+# http://geant4.web.cern.ch/geant4/G4UsersDocuments/UsersGuides/ForApplicationDeveloper/html/Control/UIcommands/_gun_.html
+# for a full list of /gps/ commands see:
+# https://geant4.web.cern.ch/geant4/UserDocumentation/UsersGuides/ForApplicationDeveloper/html/ch02s07.html
+
+
+/run/verbose 0
+/tracking/verbose 0
+/hits/verbose 0
+/process/em/verbose 0
+/process/had/cascade/verbose 0
+/process/verbose 0
+/process/setVerbose 0
+/run/initialize
+/vis/disable
+
+/WCSim/PMTQEMethod      Multi_Tank_Types
+/WCSim/LAPPDQEMethod    Multi_Tank_Types
+/WCSim/PMTCollEff on
+/WCSim/SavePi0 true
+/control/execute macros/annie_daq.mac
+
+/DarkRate/SetDetectorElement tank
+/DarkRate/SetDarkMode 1
+/DarkRate/SetDarkHigh 100000
+/DarkRate/SetDarkLow 0
+/DarkRate/SetDarkWindow 4000
+/DarkRate/SetDetectorElement mrd
+/DarkRate/SetDarkMode 1
+/DarkRate/SetDarkHigh 100000
+/DarkRate/SetDarkLow 0
+/DarkRate/SetDarkWindow 4000
+/DarkRate/SetDetectorElement facc
+/DarkRate/SetDarkMode 1
+/DarkRate/SetDarkHigh 100000
+/DarkRate/SetDarkLow 0
+/DarkRate/SetDarkWindow 4000
+
+
+
+# Use a muon gun 
+/mygen/generator gun
+/gun/particle mu-
+/gun/energy 1 GeV
+/gun/direction 0.40 0 0.6 
+/gun/position 500 -144 1200 mm 
+
+
+/control/execute macros/setRandomParameters.mac
+
+/WCSimIO/RootFile wcsim_mu
+/run/beamOn 500
+
+exit
+
