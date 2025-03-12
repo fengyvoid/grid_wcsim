@@ -44,14 +44,14 @@
 /mygen/generator gun
 /gun/particle mu-
 /gun/energy 1 GeV
-/gun/direction 0.40 0 0.6 
-/gun/position 500 -144 1200 mm 
+/gun/direction 0 0 1 
+/gun/position 0 -144 1681 mm 
 
 
 /control/execute macros/setRandomParameters.mac
 
 /WCSimIO/RootFile wcsim_mu
-/run/beamOn 500
+/run/beamOn 1000
 
 exit
 

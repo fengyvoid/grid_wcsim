@@ -2,13 +2,13 @@
 
 xStep=$1
 yStep=$2
-xStepSize=30
-yStepSize=30
+xStepSize=100
+yStepSize=100
 
 xDirStep=$3
 yDirStep=$4
-xDirStepSize=0.05
-yDirStepSize=0.05
+xDirStepSize=0.1
+yDirStepSize=0.2
 
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
