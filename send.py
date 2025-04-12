@@ -2,12 +2,12 @@ import os,sys
 import time
 
 
-WCSim_loc = '/exp/annie/app/users/yuefeng/WCSimTools/devVersion/PrepareForGrid/'
-INPUT_PATH = '/pnfs/annie/persistent/users/yuefeng/WCSimResult_LAPPD/scripts/'
+WCSim_loc = '/exp/annie/app/users/yuefeng/WCSimTools/devVersion/PrepareForGrid_beam/'
+INPUT_PATH = '/pnfs/annie/persistent/users/yuefeng/WCSimResult_LAPPD/scripts_beam/'
 
-job_label = 'shadowingMapStudy_withInner/'
+job_label = 'beam_withInner/'
 ####################
-events_per_job = 200                 # same as in the WCSim.mac file
+events_per_job = 1000                 # same as in the WCSim.mac file
 ####################
 
 #### new parameters to specify muon position looping
