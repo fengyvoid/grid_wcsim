@@ -5,9 +5,9 @@ import time
 WCSim_loc = '/exp/annie/app/users/yuefeng/WCSimTools/devVersion/PrepareForGrid/'
 INPUT_PATH = '/pnfs/annie/persistent/users/yuefeng/WCSimResult_LAPPD/scripts/'
 
-job_label = 'muon_grid_withInner_10cmStepSize/'
+job_label = 'shadowingMapStudy_withInner/'
 ####################
-events_per_job = 1000                 # same as in the WCSim.mac file
+events_per_job = 200                 # same as in the WCSim.mac file
 ####################
 
 #### new parameters to specify muon position looping
@@ -22,15 +22,15 @@ MuPositionOrigion = [0, -144, 1681]
 #MuYStepNumber = 7 # 2n + 1 step on y direction
 #MuYStepSize = 30 # 3 cm
 
-MuXStepNumber = 1 # 2n + 1 step on x direction
-MuXStepSize = 100 # 3 cm
-MuYStepNumber = 1 # 2n + 1 step on y direction
-MuYStepSize = 100 
+MuXStepNumber = 6 # 6, 2n + 1 step on x direction
+MuXStepSize = 200 # 3 cm
+MuYStepNumber = 6 # 6, 2n + 1 step on y direction
+MuYStepSize = 200 
 
-MuXDirectionStepSize = 0.1
-MuXDirectionStepNumber = 1  # 2n+1 steps in total
+MuXDirectionStepSize = 0.2
+MuXDirectionStepNumber = 4  # 4, 2n+1 steps in total
 MuYDirectionStepSize = 0.2
-MuYDirectionStepNumber = 1 # 2n+1 steps in total
+MuYDirectionStepNumber = 4 # 4, 2n+1 steps in total
 
 TotalStepNumber = (MuXStepNumber*2+1) * (MuYStepNumber*2+1) * (MuXDirectionStepNumber*2+1) * (MuYDirectionStepNumber*2+1)
 total_events = TotalStepNumber * events_per_job
@@ -84,7 +84,7 @@ with open(txt_filename, 'r') as f:
                 run_name_from_line = tokens[idx+1]
                 run_names_in_txt.add(run_name_from_line)
 
-print('Finding unprocessed runName', run_names_in_txt)
+#print('Finding unprocessed runName', run_names_in_txt)
 
 
 print('\nSending jobs...\n')

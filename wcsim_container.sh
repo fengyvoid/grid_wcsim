@@ -30,7 +30,7 @@ echo "running WCSim..." >> /srv/logfile_${PART_NAME}.txt
 
 # Run the toolchain, and output verbose to log file 
 chmod +x WCSim
-./WCSim WCSim.mac #>> /srv/logfile_${PART_NAME}.txt
+./WCSim WCSim.mac >> /srv/logfile_${PART_NAME}.txt
 
 echo "" >> /srv/logfile_${PART_NAME}.txt
 echo "-----------------------------------------" >> /srv/logfile_${PART_NAME}.txt 
