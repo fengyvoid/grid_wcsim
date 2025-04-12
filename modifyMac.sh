@@ -2,12 +2,12 @@
 
 xStep=$1
 yStep=$2
-xStepSize=100
-yStepSize=100
+xStepSize=200
+yStepSize=200
 
 xDirStep=$3
 yDirStep=$4
-xDirStepSize=0.1
+xDirStepSize=0.2
 yDirStepSize=0.2
 
 
