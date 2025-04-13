@@ -36,6 +36,16 @@ print('\n')
 
 time.sleep(3)
 
+WCSimMacro_path = WCSim_loc + 'WCSim/build/WCSim.mac'
+with open(WCSimMacro_path, 'r') as file:
+    lines = file.readlines()
+with open(WCSimMacro_path, 'w') as file:
+    for line in lines:
+        if line.strip().startswith('/run/beamOn'):
+            file.write(f'/run/beamOn {simEvent_per_job}\n')
+            print("Change the number of events in WCSim.mac to: " + str(simEvent_per_job))
+        else:
+            file.write(line)
 print('WCSim.mac details:')
 print('------------------')
 os.system('cat ' + WCSim_loc + 'WCSim/build/WCSim.mac')
@@ -51,27 +61,29 @@ print('Setting up ifdh cp...\n')
 print('\nSending jobs...\n')
 submitted = 0
 for run in range(submit_run_total):
+    
+    genieFileName = genie_path + 'gntp.' + str(runNumber) + '.ghep.root'
+    annieDirtFileName = annieDirt_path + 'annie_tank_flux.' + str(runNumber) + '.root'
+    
+    # remove any old files
+    for file in glob.glob(os.path.join(WCSim_loc, 'WCSim/build/gntp*.root')):
+        subprocess.run(['rm', '-f', file])
+    for file in glob.glob(os.path.join(WCSim_loc, 'WCSim/build/annie_tank_flux*.root')):
+        subprocess.run(['rm', '-f', file])
+    for file in glob.glob(os.path.join(WCSim_loc, 'WCSim/build/wcsim_*.root')):
+        subprocess.run(['rm', '-f', file])
+        
+    # copy files to WCSim location
+    os.system('cp ' + genieFileName + ' ' + WCSim_loc + 'WCSim/build/.')
+    os.system('cp ' + annieDirtFileName + ' ' + WCSim_loc + 'WCSim/build/.')
+    #subprocess.run(['ifdh', 'cp', genieFileName, WCSim_loc + 'WCSim/build/.'], shell=True, executable='/bin/bash', check=True)
+    #subprocess.run(['ifdh', 'cp', annieDirtFileName, WCSim_loc + 'WCSim/build/.'], shell=True, executable='/bin/bash', check=True)
+            
     for subrun in range(int(20000/simEvent_per_job)):
         runNumber = int(StartRunNumber + run)
         subrunNumber = int(subrun)
         runName = str(runNumber) + '_' + str(subrunNumber)
-        genieFileName = genie_path + 'gntp.' + str(runNumber) + '.ghep.root'
-        annieDirtFileName = annieDirt_path + 'annie_tank_flux.' + str(runNumber) + '.root'
-        
-        # remove any old files
-        for file in glob.glob(os.path.join(WCSim_loc, 'WCSim/build/gntp*.root')):
-            subprocess.run(['rm', '-f', file])
-        for file in glob.glob(os.path.join(WCSim_loc, 'WCSim/build/annie_tank_flux*.root')):
-            subprocess.run(['rm', '-f', file])
-        for file in glob.glob(os.path.join(WCSim_loc, 'WCSim/build/wcsim_*.root')):
-            subprocess.run(['rm', '-f', file])
-            
-        # copy files to WCSim location
-        os.system('cp ' + genieFileName + ' ' + WCSim_loc + 'WCSim/build/.')
-        os.system('cp ' + annieDirtFileName + ' ' + WCSim_loc + 'WCSim/build/.')
-        #subprocess.run(['ifdh', 'cp', genieFileName, WCSim_loc + 'WCSim/build/.'], shell=True, executable='/bin/bash', check=True)
-        #subprocess.run(['ifdh', 'cp', annieDirtFileName, WCSim_loc + 'WCSim/build/.'], shell=True, executable='/bin/bash', check=True)
-        
+
         # modify macros
         primariesoffsetNumber = int(subrunNumber) * int(simEvent_per_job)
         macro_path = WCSim_loc + 'WCSim/build/macros/primaries_directory.mac'
@@ -85,18 +97,6 @@ for run in range(submit_run_total):
                 else:
                     file.write(line)
                     
-        WCSimMacro_path = WCSim_loc + 'WCSim/build/WCSim.mac'
-        with open(WCSimMacro_path, 'r') as file:
-            lines = file.readlines()
-        with open(WCSimMacro_path, 'w') as file:
-            for line in lines:
-                if line.strip().startswith('/run/beamOn'):
-                    file.write(f'/run/beamOn {simEvent_per_job}\n')
-                    print("Change the number of events in WCSim.mac to: " + str(simEvent_per_job))
-                else:
-                    file.write(line)
-        
-        
         # tar WCSim directory
         print('\ntar-ing WCSim for grid submission...\n')
         os.system('rm -rf WCSim.tar.gz')   # remove old tar file
