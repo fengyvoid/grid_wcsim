@@ -3,6 +3,8 @@
 # Modified by Steven Doran
 
 PART_NAME=$1
+runNumber=$2
+subRunNumber=$3
 
 
 # logfile
@@ -20,8 +22,8 @@ source sourceme >> /srv/logfile_${PART_NAME}.txt
 
 
 # change the WCSim.mac file
-chmod +x modifyMac.sh
-source modifyMac.sh $2 $3 $4 $5 >> /srv/logfile_${PART_NAME}.txt
+#chmod +x modifyMac.sh
+#source modifyMac.sh $2 $3 $4 $5 >> /srv/logfile_${PART_NAME}.txt
 
 cat WCSim.mac >> /srv/logfile_${PART_NAME}.txt
 echo "" >> /srv/logfile_${PART_NAME}.txt
@@ -43,8 +45,8 @@ ls -lrth >> /srv/logfile_${PART_NAME}.txt
 echo "" >> /srv/logfile_${PART_NAME}.txt
 
 # copy any produced files to /srv for extraction
-cp wcsim_mu_0.root /srv/wcsim_mu_${PART_NAME}.root 
-cp wcsim_mu_lappd_0.root /srv/wcsim_mu_lappd_${PART_NAME}.root
+cp wcsim_0.root /srv/wcsim_0.${runNumber}.${subRunNumber}.root 
+cp wcsim_lappd_0.root /srv/wcsim_lappd.0.${runNumber}.${subRunNumber}.root
 
 # make sure any output files you want to keep are put in /srv or any subdirectory of /srv 
 

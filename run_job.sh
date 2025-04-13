@@ -13,10 +13,8 @@ GRIDUSER="yuefeng"
 
 # Argument passed through job submission 
 PART_NAME=$1
-xStep=$3
-yStep=$4
-xDirStep=$5
-yDirStep=$6
+runNumber=$2
+subRunNumber=$3
 
 # Create a dummy log file in the output directory
 DUMMY_OUTPUT_FILE=${CONDOR_DIR_OUTPUT}/${JOBSUBJOBID}_dummy_output 
@@ -64,14 +62,14 @@ ls /cvmfs/singularity.opensciencegrid.org >> ${DUMMY_OUTPUT_FILE}
 echo "" >> ${DUMMY_OUTPUT_FILE}
 
 # Setup singularity container 
-singularity exec -B/srv:/srv /cvmfs/singularity.opensciencegrid.org/anniesoft/wcsim\:latest/ $CONDOR_DIR_INPUT/wcsim_container.sh $PART_NAME $xStep $yStep $xDirStep $yDirStep
+singularity exec -B/srv:/srv /cvmfs/singularity.opensciencegrid.org/anniesoft/wcsim\:latest/ $CONDOR_DIR_INPUT/wcsim_container.sh $PART_NAME $runNumber $subRunNumber 
 
 
 # cleanup and move files to $CONDOR_OUTPUT after leaving singularity environment
 echo "Moving the output files to CONDOR OUTPUT..." >> ${DUMMY_OUTPUT_FILE} 
 ${JSB_TMP}/ifdh.sh cp -D /srv/logfile* $CONDOR_DIR_OUTPUT         # log files
-${JSB_TMP}/ifdh.sh cp -D /srv/wcsim_mu_${PART_NAME}.root $CONDOR_DIR_OUTPUT
-${JSB_TMP}/ifdh.sh cp -D /srv/wcsim_mu_lappd_${PART_NAME}.root $CONDOR_DIR_OUTPUT
+${JSB_TMP}/ifdh.sh cp -D /srv/wcsim_*.root $CONDOR_DIR_OUTPUT
+${JSB_TMP}/ifdh.sh cp -D /srv/wcsim_lappd_*.root $CONDOR_DIR_OUTPUT
 
 echo "" >> ${DUMMY_OUTPUT_FILE} 
 echo "Input:" >> ${DUMMY_OUTPUT_FILE} 
