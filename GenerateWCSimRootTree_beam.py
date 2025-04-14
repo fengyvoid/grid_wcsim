@@ -55,7 +55,9 @@ def main():
             with open(lappd_config_file, "r") as f:
                 content_lappd = f.read()
 
-            pattern_lappd = r'^InputFile\s+.*/wcsim*\.root$'
+            #pattern_lappd = r'^InputFile\s+.*/wcsim*\.root$'
+            pattern_lappd = r'^InputFile\s+.*wcsim_lappd.*\.root$'
+
             replacement_lappd = f"InputFile {folder_path}wcsim_lappd.0.{file_id}.root"
 
             new_content_lappd = re.sub(
@@ -64,6 +66,9 @@ def main():
                 content_lappd,
                 flags=re.MULTILINE
             )
+            if not re.search(pattern_lappd, content_lappd, flags=re.MULTILINE):
+                print("[DEBUG] No match found in LoadWCSimLAPPDConfig!")
+
 
             with open(lappd_config_file, "w") as f:
                 f.write(new_content_lappd)
@@ -77,7 +82,12 @@ def main():
             with open(wcsim_config_file, "r") as f:
                 content_wcsim = f.read()
 
-            pattern_wcsim = r'^InputFile\s+.*/wcsim*\.root$'
+            #pattern_wcsim = r'^InputFile\s+.*wcsim*\.root$'
+            pattern_wcsim = r'^InputFile\s+.*wcsim_0\..*\.root$'
+
+            if not re.search(pattern_wcsim, content_wcsim, flags=re.MULTILINE):
+                print("[DEBUG] No match found in LoadWCSimConfig!")
+                
             replacement_wcsim = f"InputFile {folder_path}wcsim_0.{file_id}.root"
 
             new_content_wcsim = re.sub(
@@ -94,7 +104,7 @@ def main():
             
             
         # -- 2.3.5) Modify LoadGenieConfig
-        Genie_config_file = "LoadGenieConfig"
+        Genie_config_file = "LoadGenieEventConfig"
         if os.path.exists(Genie_config_file):
             with open(Genie_config_file, "r") as f:
                 content_Genie = f.read()

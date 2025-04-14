@@ -10,10 +10,10 @@ INPUT_PATH = '/pnfs/annie/persistent/users/yuefeng/WCSimResult_LAPPD/scripts_bea
 genie_path = '/pnfs/annie/persistent/simulations/genie3/G1810a0211a/standardv1.0/tank/'
 annieDirt_path = '/pnfs/annie/persistent/simulations/g4dirt/G1810a0211a/standardv1.0/tank/'
 
-StartRunNumber = 1
+StartRunNumber = 0
 submit_run_total = 1
 
-job_label = 'beam_withInner/'
+job_label = 'beam_withInner_2000/'
 
 ####################
 simEvent_per_job = 2000
@@ -62,6 +62,7 @@ print('\nSending jobs...\n')
 submitted = 0
 for run in range(submit_run_total):
     
+    runNumber = int(StartRunNumber + run)
     genieFileName = genie_path + 'gntp.' + str(runNumber) + '.ghep.root'
     annieDirtFileName = annieDirt_path + 'annie_tank_flux.' + str(runNumber) + '.root'
     
@@ -80,7 +81,6 @@ for run in range(submit_run_total):
     #subprocess.run(['ifdh', 'cp', annieDirtFileName, WCSim_loc + 'WCSim/build/.'], shell=True, executable='/bin/bash', check=True)
             
     for subrun in range(int(20000/simEvent_per_job)):
-        runNumber = int(StartRunNumber + run)
         subrunNumber = int(subrun)
         runName = str(runNumber) + '_' + str(subrunNumber)
 
@@ -99,14 +99,16 @@ for run in range(submit_run_total):
                     
         # tar WCSim directory
         print('\ntar-ing WCSim for grid submission...\n')
+        os.system('tar -czvf tmp/WCSim.tar.gz -C ' + WCSim_loc + ' WCSim')
+        time.sleep(10)     
         os.system('rm -rf WCSim.tar.gz')   # remove old tar file
-        os.system('tar -czvf WCSim.tar.gz -C ' + WCSim_loc + ' WCSim')
-        time.sleep(1)     
-        
+        os.system('mv tmp/WCSim.tar.gz .')
+
         print("Submitting " + str(submitted)+ "th job for run " + str(runNumber) + " subrun " + str(subrunNumber) + " with genie file: " + genieFileName)
         os.system('sh submit_wcsim_job_beam.sh ' + runName + ' ' + job_label + ' ' + str(runNumber) + ' ' + str(subrunNumber) )
         submitted += 1
 
+        time.sleep(10)
 
 
                 
