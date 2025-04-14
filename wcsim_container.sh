@@ -44,6 +44,8 @@ echo "WCSim directory contents:" >> /srv/logfile_${PART_NAME}.txt
 ls -lrth >> /srv/logfile_${PART_NAME}.txt
 echo "" >> /srv/logfile_${PART_NAME}.txt
 
+cat macros/primaries_directory.mac >> /srv/logfile_${PART_NAME}.txt
+
 # copy any produced files to /srv for extraction
 cp wcsim_0.root /srv/wcsim_0.${runNumber}.${subRunNumber}.root 
 cp wcsim_lappd_0.root /srv/wcsim_lappd.0.${runNumber}.${subRunNumber}.root
