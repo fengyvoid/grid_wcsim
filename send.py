@@ -33,6 +33,10 @@ print('\n')
 print('Batch name: ' + job_label)
 print('\n')
 
+#create a tmp folder to store the tar file if it does not exist
+if not os.path.exists('tmp'):
+    os.makedirs('tmp')
+    print('Create tmp folder to store the tar file.\n')
 
 time.sleep(3)
 
