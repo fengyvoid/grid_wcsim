@@ -9,8 +9,14 @@ import subprocess
 def main():
 
     # 1) Collect file IDs
-    folder_path = "/pnfs/annie/scratch/users/yuefeng/WCSimOutput/MuonMapping/muon_grid/"
+    folder_path = "/pnfs/annie/scratch/users/yuefeng/WCSimOutput/MuonMapping/shadowingMapStudy_withInner/"
+    #folder_path = "/pnfs/annie/scratch/users/yuefeng/WCSimOutput/MuonMapping/muon_grid_withInner_paperEvent_LAPPDY-225/"
     WaitingForProcessing = []
+    
+    #target_folder = "/pnfs/annie/persistent/users/yuefeng/WCSimResult_LAPPD/muon_grid_withInner_paperEvent_LAPPDY-225/"
+    target_folder = "/pnfs/annie/persistent/users/yuefeng/WCSimResult_LAPPD/shadowingMapStudy_withInner/"
+    start_from = 10238
+
 
     # Store the path where this script was initially called
     original_path = os.getcwd()
@@ -21,28 +27,28 @@ def main():
             # Extract the portion between "wcsim_mu_lappd_" and ".root"
             key_part = filename[len("wcsim_mu_lappd_") : -len(".root")]
             WaitingForProcessing.append(key_part)
+    
+    WaitingForProcessing.sort()
 
     print("WaitingForProcessing list:", WaitingForProcessing)
 
-    # 2) Process each file ID
-    for file_id in WaitingForProcessing:
-        # -- 2.1) Change directory to configfiles/BeamClusterAnalysisMC
+
+    total_files = len(WaitingForProcessing)
+    for idx, file_id in enumerate(WaitingForProcessing, start=1):
+        if idx < start_from:
+            continue
+
+        print(f"Processing {idx}/{total_files}: wcsim_mu_lappd_{file_id}.root")
+
+
+    #for file_id in WaitingForProcessing:
         config_path = os.path.join(original_path, "configfiles", "BeamClusterAnalysisMC")
         os.chdir(config_path)
-
-        # -- 2.2) Modify LoadWCSimLAPPDConfig
-        # We want to replace the entire line starting with "InputFile" that points to any file matching
-        # 'wcsim_mu_lappd_*.root' with our new full path (folder_path + wcsim_mu_lappd_<file_id>.root).
         lappd_config_file = "LoadWCSimLAPPDConfig"
         if os.path.exists(lappd_config_file):
             with open(lappd_config_file, "r") as f:
                 content_lappd = f.read()
 
-            # Regex explanation:
-            #  ^InputFile\s+         -> Match a line starting with 'InputFile' followed by one or more spaces
-            #  .*/wcsim_mu_lappd_    -> Then match any path up to 'wcsim_mu_lappd_'
-            #  .*\.root$            -> Match the rest of the characters until '.root' at line end
-            #  flags=re.MULTILINE    -> Allows ^ and $ to match the start/end of each line
             pattern_lappd = r'^InputFile\s+.*/wcsim_mu_lappd_.*\.root$'
             replacement_lappd = f"InputFile {folder_path}wcsim_mu_lappd_{file_id}.root"
 
@@ -98,7 +104,6 @@ def main():
             continue
 
         # -- 2.7) Move the renamed file to WCSimRootTree folder, creating it if necessary
-        target_folder = "WCSimRootTreeB"
         if not os.path.exists(target_folder):
             os.makedirs(target_folder)
 
