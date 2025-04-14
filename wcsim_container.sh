@@ -5,6 +5,7 @@
 PART_NAME=$1
 runNumber=$2
 subRunNumber=$3
+offsetNumber=$4
 
 
 # logfile
@@ -20,10 +21,12 @@ echo "" >> /srv/logfile_${PART_NAME}.txt
 chmod +x sourceme
 source sourceme >> /srv/logfile_${PART_NAME}.txt
 
+mv genieFile/gntp.${runNumber}.ghep.root .
+mv genieFile/annie_tank_flux.${runNumber}.root .
 
-# change the WCSim.mac file
-#chmod +x modifyMac.sh
-#source modifyMac.sh $2 $3 $4 $5 >> /srv/logfile_${PART_NAME}.txt
+chmod +x update_offset.sh
+./update_offset.sh ${offsetNumber}
+
 
 cat WCSim.mac >> /srv/logfile_${PART_NAME}.txt
 echo "" >> /srv/logfile_${PART_NAME}.txt

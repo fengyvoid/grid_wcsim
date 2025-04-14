@@ -15,6 +15,7 @@ GRIDUSER="yuefeng"
 PART_NAME=$1
 runNumber=$2
 subRunNumber=$3
+offsetNumber=$4
 
 # Create a dummy log file in the output directory
 DUMMY_OUTPUT_FILE=${CONDOR_DIR_OUTPUT}/${JOBSUBJOBID}_dummy_output 
@@ -62,7 +63,7 @@ ls /cvmfs/singularity.opensciencegrid.org >> ${DUMMY_OUTPUT_FILE}
 echo "" >> ${DUMMY_OUTPUT_FILE}
 
 # Setup singularity container 
-singularity exec -B/srv:/srv /cvmfs/singularity.opensciencegrid.org/anniesoft/wcsim\:latest/ $CONDOR_DIR_INPUT/wcsim_container.sh $PART_NAME $runNumber $subRunNumber 
+singularity exec -B/srv:/srv /cvmfs/singularity.opensciencegrid.org/anniesoft/wcsim\:latest/ $CONDOR_DIR_INPUT/wcsim_container.sh $PART_NAME $runNumber $subRunNumber $offsetNumber
 
 
 # cleanup and move files to $CONDOR_OUTPUT after leaving singularity environment
